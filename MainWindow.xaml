@@ -9,23 +9,22 @@
         Title="SadCalculator" Height="450" Width="300" MinWidth="300" MinHeight="450">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="3*"/>
         </Grid.RowDefinitions>
 
-        <!-- Display -->
-        <Grid Grid.Row="0">
+        <Grid Grid.Row="0" Margin="20,0,20,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Button x:Name="MenuButton" Content="≡" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Height="30" Grid.Row="0" Click="ToggleScientific_Click"/>
             <Button x:Name="CollapseButton" Content="&lt;" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Height="30" Grid.Row="0" Click="ToggleScientific_Click" Visibility="Collapsed"/>
-            <TextBlock x:Name="CalculationDisplay" Grid.Row="0" TextAlignment="Right" FontSize="16" Foreground="Gray"/>
-            <TextBlock x:Name="ResultDisplay" Grid.Row="1" TextAlignment="Right" FontSize="24"/>
+            <TextBlock x:Name="CalculationDisplay" Grid.Row="0" TextAlignment="Right" FontSize="16" Foreground="Gray" Margin="40,0,0,5"/>
+            <TextBlock x:Name="ResultDisplay" Grid.Row="1" TextAlignment="Right" FontSize="24" Margin="0,5,0,0"/>
         </Grid>
-        
-        <Grid x:Name="ButtonsGrid" Grid.Row="1">
+
+        <Grid x:Name="ButtonsGrid" Grid.Row="1" Margin="20,0,20,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -34,43 +33,43 @@
                 <ColumnDefinition x:Name="ExtraColumn" Width="0"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="4*"/>
+                <RowDefinition Height="4*"/>
+                <RowDefinition Height="4*"/>
+                <RowDefinition Height="4*"/>
+                <RowDefinition Height="4*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <Button Content="CE" Grid.Row="0" Grid.Column="0" Margin="2" Click="Undo_Click"/>
-            <Button Content="C" Grid.Row="0" Grid.Column="1" Margin="2" Click="Clear_Click"/>
-            <Button Content="⌫" Grid.Row="0" Grid.Column="2" Margin="2" Click="Backspace_Click"/>
-            <Button Content="÷" Grid.Row="0" Grid.Column="3" Margin="2" Click="Operator_Click"/>
-            <Button Content="π" Grid.Row="0" Grid.Column="4" Margin="2" Click="Scientific_Click" Visibility="Collapsed"/>
+            <Button Content="C" Grid.Row="0" Grid.Column="1" Margin="2,2,2,2" Click="Clear_Click"/>
+            <Button Content="↩" Grid.Row="0" Grid.Column="0" Margin="2,2,2,2" Click="Undo_Click"/>
+            <Button Content="⌫" Grid.Row="0" Grid.Column="2" Margin="2,2,2,2" Click="Backspace_Click"/>
+            <Button Content="/" Grid.Row="0" Grid.Column="3" Margin="2,2,2,2" Click="Operator_Click"/>
+            <Button Content="π" Grid.Row="0" Grid.Column="4" Margin="2,2,-2,2" Click="Scientific_Click" Visibility="Collapsed"/>
 
-            <Button Content="7" Grid.Row="1" Grid.Column="0" Margin="2" Click="Number_Click"/>
-            <Button Content="8" Grid.Row="1" Grid.Column="1" Margin="2" Click="Number_Click"/>
-            <Button Content="9" Grid.Row="1" Grid.Column="2" Margin="2" Click="Number_Click"/>
-            <Button Content="×" Grid.Row="1" Grid.Column="3" Margin="2" Click="Operator_Click"/>
-            <Button Content="e" Grid.Row="1" Grid.Column="4" Margin="2" Click="Scientific_Click" Visibility="Collapsed"/>
+            <Button Content="7" Grid.Row="1" Grid.Column="0" Margin="2,2,2,2" Click="Number_Click"/>
+            <Button Content="8" Grid.Row="1" Grid.Column="1" Margin="2,2,2,2" Click="Number_Click"/>
+            <Button Content="9" Grid.Row="1" Grid.Column="2" Margin="2,2,2,2" Click="Number_Click"/>
+            <Button Content="*" Grid.Row="1" Grid.Column="3" Margin="2,2,2,2" Click="Operator_Click"/>
+            <Button Content="e" Grid.Row="1" Grid.Column="4" Margin="2,2,-2,2" Click="Scientific_Click" Visibility="Collapsed"/>
 
-            <Button Content="4" Grid.Row="2" Grid.Column="0" Margin="2" Click="Number_Click"/>
-            <Button Content="5" Grid.Row="2" Grid.Column="1" Margin="2" Click="Number_Click"/>
-            <Button Content="6" Grid.Row="2" Grid.Column="2" Margin="2" Click="Number_Click"/>
-            <Button Content="-" Grid.Row="2" Grid.Column="3" Margin="2" Click="Operator_Click"/>
-            <Button Content="√" Grid.Row="2" Grid.Column="4" Margin="2" Click="Scientific_Click" Visibility="Collapsed"/>
+            <Button Content="4" Grid.Row="2" Grid.Column="0" Margin="2,2,2,2" Click="Number_Click"/>
+            <Button Content="5" Grid.Row="2" Grid.Column="1" Margin="2,2,2,2" Click="Number_Click"/>
+            <Button Content="6" Grid.Row="2" Grid.Column="2" Margin="2,2,2,2" Click="Number_Click"/>
+            <Button Content="-" Grid.Row="2" Grid.Column="3" Margin="2,2,2,2" Click="Operator_Click"/>
+            <Button Content="√" Grid.Row="2" Grid.Column="4" Margin="2,2,-2,2" Click="Scientific_Click" Visibility="Collapsed"/>
 
-            <Button Content="1" Grid.Row="3" Grid.Column="0" Margin="2" Click="Number_Click"/>
-            <Button Content="2" Grid.Row="3" Grid.Column="1" Margin="2" Click="Number_Click"/>
-            <Button Content="3" Grid.Row="3" Grid.Column="2" Margin="2" Click="Number_Click"/>
-            <Button Content="+" Grid.Row="3" Grid.Column="3" Margin="2" Click="Operator_Click"/>
-            <Button Content="n²" Grid.Row="3" Grid.Column="4" Margin="2" Click="Scientific_Click" Visibility="Collapsed"/>
+            <Button Content="1" Grid.Row="3" Grid.Column="0" Margin="2,2,2,2" Click="Number_Click"/>
+            <Button Content="2" Grid.Row="3" Grid.Column="1" Margin="2,2,2,2" Click="Number_Click"/>
+            <Button Content="3" Grid.Row="3" Grid.Column="2" Margin="2,2,2,2" Click="Number_Click"/>
+            <Button Content="+" Grid.Row="3" Grid.Column="3" Margin="2,2,2,2" Click="Operator_Click"/>
+            <Button Content="x²" Grid.Row="3" Grid.Column="4" Margin="2,2,-2,2" Click="Scientific_Click" Visibility="Collapsed"/>
 
-            <Button Content="Redo" Grid.Row="4" Grid.Column="0" Margin="2" Click="Redo_Click"/>
-            <Button Content="0" Grid.Row="4" Grid.Column="1" Margin="2" Click="Number_Click"/>
-            <Button Content="." Grid.Row="4" Grid.Column="2" Margin="2" Click="Decimal_Click"/>
-            <Button Content="=" Grid.Row="4" Grid.Column="3" Margin="2" Click="Equals_Click"/>
-            <Button Content="ln" Grid.Row="4" Grid.Column="4" Margin="2" Click="Scientific_Click" Visibility="Collapsed"/>
+            <Button Content="↪" Grid.Row="4" Grid.Column="0" Margin="2,2,2,2" Click="Redo_Click"/>
+            <Button Content="0" Grid.Row="4" Grid.Column="1" Margin="2,2,2,2" Click="Number_Click"/>
+            <Button Content="," Grid.Row="4" Grid.Column="2" Margin="2,2,2,2" Click="Decimal_Click"/>
+            <Button Content="=" Grid.Row="4" Grid.Column="3" Margin="2,2,2,2" Click="Equals_Click"/>
+            <Button Content="ln" Grid.Row="4" Grid.Column="4" Margin="2,2,-2,2" Click="Scientific_Click" Visibility="Collapsed"/>
         </Grid>
     </Grid>
 </Window>

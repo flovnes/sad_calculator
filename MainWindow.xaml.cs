@@ -15,7 +15,7 @@ namespace SadCalculator {
             InitializeComponent();
             calculator = new CalculatorEngine();
             commandManager = new CommandManager();
-            this.KeyDown += MainWindow_KeyDown;
+            KeyDown += MainWindow_KeyDown;
             UpdateDisplay();
         }
 
@@ -26,56 +26,46 @@ namespace SadCalculator {
 
         private void MainWindow_KeyDown(object sender, KeyEventArgs e) {
             switch (e.Key) {
-                case Key.NumPad0:
-                case Key.D0:
-                    ProcessNumberInput("0");
-                    break;
-                case Key.NumPad1:
                 case Key.D1:
                     ProcessNumberInput("1");
                     break;
-                case Key.NumPad2:
                 case Key.D2:
                     ProcessNumberInput("2");
                     break;
-                case Key.NumPad3:
                 case Key.D3:
                     ProcessNumberInput("3");
                     break;
-                case Key.NumPad4:
                 case Key.D4:
                     ProcessNumberInput("4");
                     break;
-                case Key.NumPad5:
                 case Key.D5:
                     ProcessNumberInput("5");
                     break;
-                case Key.NumPad6:
                 case Key.D6:
                     ProcessNumberInput("6");
                     break;
-                case Key.NumPad7:
                 case Key.D7:
                     ProcessNumberInput("7");
                     break;
-                case Key.NumPad8:
                 case Key.D8:
-                    ProcessNumberInput("8");
+                    if ((Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift)
+                        ProcessOperator("*");
+                    else
+                        ProcessNumberInput("8");
                     break;
-                case Key.NumPad9:
                 case Key.D9:
                     ProcessNumberInput("9");
                     break;
-                case Key.Add:
+                case Key.D0:
+                    ProcessNumberInput("0");
+                    break;
+                case Key.OemPlus:
                     ProcessOperator("+");
                     break;
-                case Key.Subtract:
+                case Key.OemMinus:
                     ProcessOperator("-");
                     break;
-                case Key.Multiply:
-                    ProcessOperator("*");
-                    break;
-                case Key.Divide:
+                case Key.OemQuestion:
                     ProcessOperator("/");
                     break;
                 case Key.Enter:
@@ -93,10 +83,10 @@ namespace SadCalculator {
                     Decimal_Click(null, null);
                     break;
                 case Key.Z:
-                    if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
-                        Undo_Click(null, null);
-                    else if ((Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Shift)) == (ModifierKeys.Control | ModifierKeys.Shift))
+                    if ((Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Shift)) == (ModifierKeys.Control | ModifierKeys.Shift))
                         Redo_Click(null, null);
+                    else if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+                        Undo_Click(null, null);
                     break;
             }
         }
@@ -159,7 +149,7 @@ namespace SadCalculator {
             
             if (isScientificMode) {
                 ExtraColumn.Width = new GridLength(1, GridUnitType.Star);
-                this.Width += 80;
+                Width += 80;
                 MenuButton.Visibility = Visibility.Collapsed;
                 CollapseButton.Visibility = Visibility.Visible;
                 
@@ -169,7 +159,7 @@ namespace SadCalculator {
                 }
             } else {
                 ExtraColumn.Width = new GridLength(0);
-                this.Width -= 80;
+                Width -= 80;
                 MenuButton.Visibility = Visibility.Visible;
                 CollapseButton.Visibility = Visibility.Collapsed;
                 
@@ -211,7 +201,6 @@ namespace SadCalculator {
                 calculator.ResetErrorState();
 
             try {
-                // if we have an incomplete calculation, complete it
                 if (!string.IsNullOrEmpty(calculator.CalculationExpression) && !calculator.IsNewOperation)
                     CalculateResult();
                 
@@ -270,10 +259,10 @@ namespace SadCalculator {
 
         public void AddDecimalPoint() {
             if (IsNewOperation) {
-                DisplayValue = "0.";
+                DisplayValue = "0,";
                 IsNewOperation = false;
-            } else if (!DisplayValue.Contains(".")) {
-                DisplayValue += ".";
+            } else if (!DisplayValue.Contains(",")) {
+                DisplayValue += ",";
             }
         }
 
@@ -299,7 +288,7 @@ namespace SadCalculator {
                 IsNewOperation = false;
             }
             else {
-                if (DisplayValue == "0" && number != ".")
+                if (DisplayValue == "0" && number != ",")
                     DisplayValue = number;
                 else
                     DisplayValue += number;
@@ -338,7 +327,7 @@ namespace SadCalculator {
                     result = Math.Sqrt(input);
                     newExpression = $"√({input})";
                     break;
-                case "n²":
+                case "x²":
                     result = Math.Pow(input, 2);
                     newExpression = $"({input})²";
                     break;
@@ -411,27 +400,22 @@ namespace SadCalculator {
         private readonly Stack<ICommand> undoStack = new Stack<ICommand>();
         private readonly Stack<ICommand> redoStack = new Stack<ICommand>();
 
-        public void ExecuteCommand(ICommand command)
-        {
+        public void ExecuteCommand(ICommand command) {
             command.Execute();
             undoStack.Push(command);
             redoStack.Clear();
         }
 
-        public void Undo()
-        {
-            if (undoStack.Count > 0)
-            {
+        public void Undo() {
+            if (undoStack.Count > 0) {
                 ICommand command = undoStack.Pop();
                 command.Undo();
                 redoStack.Push(command);
             }
         }
 
-        public void Redo()
-        {
-            if (redoStack.Count > 0)
-            {
+        public void Redo() {
+            if (redoStack.Count > 0) {
                 ICommand command = redoStack.Pop();
                 command.Execute();
                 undoStack.Push(command);
@@ -439,116 +423,56 @@ namespace SadCalculator {
         }
     }
 
-    {
-        protected readonly CalculatorEngine calculator;
-        protected string oldDisplayValue;
-        protected string oldCalculationExpression;
-        protected bool oldIsNewOperation;
-
-        protected CalculatorCommand(CalculatorEngine calculator)
-        {
-            this.calculator = calculator;
-            oldDisplayValue = calculator.DisplayValue;
-            oldCalculationExpression = calculator.CalculationExpression;
-            oldIsNewOperation = calculator.IsNewOperation;
-        }
+    public abstract class CalculatorCommand(CalculatorEngine calculator) : ICommand {
+        protected readonly CalculatorEngine calculator = calculator;
+        protected string oldDisplayValue = calculator.DisplayValue;
+        protected string oldCalculationExpression = calculator.CalculationExpression;
+        protected bool oldIsNewOperation = calculator.IsNewOperation;
 
         public abstract void Execute();
 
-        public virtual void Undo()
-        {
+        public virtual void Undo() {
             calculator.SetDisplayValue(oldDisplayValue);
             calculator.SetCalculationExpression(oldCalculationExpression);
             calculator.SetNewOperation(oldIsNewOperation);
         }
     }
 
-    public class InputCommand : CalculatorCommand
-    {
-        private readonly string number;
+    public class InputCommand(CalculatorEngine calculator, string number) : CalculatorCommand(calculator) {
+        private readonly string number = number;
 
-        public InputCommand(CalculatorEngine calculator, string number) : base(calculator)
-        {
-            this.number = number;
-        }
-
-        public override void Execute()
-        {
-            calculator.ProcessNumber(number);
-        }
+        public override void Execute() => calculator.ProcessNumber(number);
     }
 
-    public class DecimalCommand : CalculatorCommand
-    {
-        public DecimalCommand(CalculatorEngine calculator) : base(calculator) { }
-
-        public override void Execute()
-        {
-            calculator.AddDecimalPoint();
-        }
+    public class DecimalCommand(CalculatorEngine calculator) : CalculatorCommand(calculator) {
+        public override void Execute() => calculator.AddDecimalPoint();
     }
 
-    public class BackspaceCommand : CalculatorCommand
-    {
-        public BackspaceCommand(CalculatorEngine calculator) : base(calculator) { }
-
-        public override void Execute()
-        {
-            calculator.Backspace();
-        }
+    public class BackspaceCommand(CalculatorEngine calculator) : CalculatorCommand(calculator) {
+        public override void Execute() => calculator.Backspace();
     }
 
-    public class OperatorCommand : CalculatorCommand
-    {
-        private readonly string operatorSymbol;
+    public class OperatorCommand(CalculatorEngine calculator, string operatorSymbol) : CalculatorCommand(calculator) {
+        private readonly string operatorSymbol = operatorSymbol;
 
-        public OperatorCommand(CalculatorEngine calculator, string operatorSymbol) : base(calculator)
-        {
-            this.operatorSymbol = operatorSymbol;
-        }
-
-        public override void Execute()
-        {
-            calculator.ApplyOperator(operatorSymbol);
-        }
+        public override void Execute() => calculator.ApplyOperator(operatorSymbol);
     }
 
-    public class CalculateCommand : CalculatorCommand
-    {
+    public class CalculateCommand(CalculatorEngine calculator) : CalculatorCommand(calculator) {
         private double firstOperand;
         private double secondOperand;
         private string operatorSymbol;
 
-        public CalculateCommand(CalculatorEngine calculator) : base(calculator) { }
-
-        public override void Execute()
-        {
-            calculator.Calculate(out _, out _, out firstOperand, out secondOperand, out operatorSymbol);
-        }
+        public override void Execute() => calculator.Calculate(out _, out _, out firstOperand, out secondOperand, out operatorSymbol);
     }
 
-    public class ScientificCommand : CalculatorCommand
-    {
-        private readonly string operation;
+    public class ScientificCommand(CalculatorEngine calculator, string operation) : CalculatorCommand(calculator) {
+        private readonly string operation = operation;
 
-        public ScientificCommand(CalculatorEngine calculator, string operation) : base(calculator)
-        {
-            this.operation = operation;
-        }
-
-        public override void Execute()
-        {
-            calculator.PerformScientificOperation(operation, out _, out _);
-        }
+        public override void Execute() => calculator.PerformScientificOperation(operation, out _, out _);
     }
 
-    public class ClearCommand : CalculatorCommand
-    {
-        public ClearCommand(CalculatorEngine calculator) : base(calculator) { }
-
-        public override void Execute()
-        {
-            calculator.Clear();
-        }
+    public class ClearCommand(CalculatorEngine calculator) : CalculatorCommand(calculator) {
+        public override void Execute() => calculator.Clear();
     }
 }
